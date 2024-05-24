@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <errno.h>
-
 #include "operations_third.h"
 
 int main(void) {
@@ -21,7 +16,7 @@ int main(void) {
         if (compare_string(path) == 1) {
             break;
         }
-        // инициализируем статус и порождаем новый процесс
+        // объявляем переменную-статус и порождаем новый процесс
         int status;
         pid_t pid = fork();
         // создание дочернего процесса с соответствующими проверками и ожиданием завершения
