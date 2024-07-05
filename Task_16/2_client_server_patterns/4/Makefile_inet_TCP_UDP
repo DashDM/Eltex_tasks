@@ -1,0 +1,37 @@
+BIN_SRV := inet_server
+OBJ_SRV := inet_server.o
+SRC_SRV := inet_server.c
+
+BIN_CLI_TCP := inet_TCP_client
+OBJ_CLI_TCP := inet_TCP_client.o
+SRC_CLI_TCP := inet_TCP_client.c
+
+BIN_CLI_UDP := inet_UDP_client
+OBJ_CLI_UDP := inet_UDP_client.o
+SRC_CLI_UDP := inet_UDP_client.c
+
+.PHONY : all clean
+
+all: $(BIN_SRV) $(BIN_CLI_TCP) $(BIN_CLI_UDP)
+
+$(BIN_SRV): $(OBJ_SRV)
+	gcc $(OBJ_SRV) -o $(BIN_SRV)
+
+$(BIN_CLI_TCP): $(OBJ_CLI_TCP)
+	gcc $(OBJ_CLI_TCP) -o $(BIN_CLI_TCP)
+	
+$(BIN_CLI_UDP): $(OBJ_CLI_UDP)
+	gcc $(OBJ_CLI_UDP) -o $(BIN_CLI_UDP)
+
+$(OBJ_SRV): $(SRC_SRV)
+	gcc -c $(SRC_SRV) -o $(OBJ_SRV)
+
+$(OBJ_CLI_TCP): $(SRC_CLI_TCP)
+	gcc -c $(SRC_CLI_TCP) -o $(OBJ_CLI_TCP)
+
+$(OBJ_CLI_UDP): $(SRC_CLI_UDP)
+	gcc -c $(SRC_CLI_UDP) -o $(OBJ_CLI_UDP)
+
+clean:
+	rm -rf $(BIN_SRV) $(BIN_CLI_TCP) $(BIN_CLI_UDP) $(OBJ_SRV) $(OBJ_CLI_TCP) $(OBJ_CLI_UDP)
+
