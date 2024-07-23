@@ -1,0 +1,4 @@
+Для корректной сборки defconfig'a в busybox, потребовалось:
+
+.config ->
+	-> CONFIG_TC = y -> CONFIG_TC = n
