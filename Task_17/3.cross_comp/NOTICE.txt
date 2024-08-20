@@ -1,0 +1,49 @@
+[Примечание]
+По 12 скриншоту видно, что установка OpenSSH завершилась ошибкой.
+Однако, на том же скриншоте, ниже проведена проверка функционала библиотеки.
+Согласно выведенному сообщению, доступ к функциям имеется.
+А значит, можно смело утверждать, что сборка библиотеки OpenSSH для ROOTFS прошла успешно.
+(Думаю, сборка прошла либо на 99.9% успешно, либо с точностью да наоборот :D)
+
+[Памятка]
+Сборка ZLIB:
+	1. если при сборке выводится сообщение об ошибке связанной с макросами (_TIME_BITS и _TIME_OFFSET_BITS),
+	то стоит попробовать следующее решение: в заголовочном файле gzguts.h добавить _TIME_BITS вот сюда:
+	
+	#ifdef _LARGEFILE64_SOURCE
+	#  ifndef _LARGEFILE_SOURCE
+	#    define _LARGEFILE_SOURCE 1
+	#  endif
+	#  ifdef _FILE_OFFSET_BITS
+	#    undef _FILE_OFFSET_BITS
+	#    undef _TIME_BITS		<-----
+	#  endif
+	#endif
+	
+	2. консоль:
+	CC=arm-linux-gnueabihf ./configure --prefix=$PWD/_install <---- под arch ARM и чтобы в папку _install
+	make
+	make install
+	
+Сборка OpenSSL:
+	1. здесь основная запара с флагами. Пришлось из тасовать туда сюда пока не пришёл к нужному решению, но после
+	zlib'a всё прошло гладко.
+	
+	2. консоль:
+	CC=arm-linux-gnueabihf-gcc ./Configure linux-armv4 --prefix=$PWD/_install shared -fPIC
+	make
+	make install
+
+Сборка OpenSSH:
+	1. жесть.
+	2. вероятно, что невероятно много ошибок разного характера будет возникать при сборке библиотеки под разные платформы.
+	3. также, даже если сборка завершилась ошибкой (а именно после make install), то это не значит, что библиотека не было корректно собрана или неустановлена.
+	необходимо просмотреть конечную папку с данной библиотекой и всем вытекающим, а также изучить саму причину ошибки.
+	4. консоль:
+	
+	./configure --host=arm-linux-gnueabihf --with-libs --with-zlib=$PWD/zlib --with-ssl-dir=$PWD/openssl --prefix=$PWD/_install --disable-strip --disable-host-key
+	--disable-etc-default-login CC=arm-linux-gnueabihf-gcc
+	make
+	make install
+	
+	(при сборке конфигурации в моём случае можно было не использовать последнии 3 флага: --disable-host-key --disable-etc-default-login CC=arm-linux-gnueabihf-gcc)
